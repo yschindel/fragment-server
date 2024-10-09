@@ -1,9 +1,6 @@
 import fs from "fs";
-import * as pako from "pako";
 import multer from "multer";
 import { Worker } from "worker_threads";
-import * as OBC from "@thatopen/components";
-import fetch from "node-fetch";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -80,7 +77,7 @@ export default async function uploadFile(req, res) {
     } catch (error) {
       console.error(`Worker error for file ${filename}: ${error.message}`);
     } finally {
-      //   deleteFile(uploads, filename);
+      deleteFile(uploads, filename);
     }
   });
 }
@@ -92,11 +89,4 @@ function deleteFile(uploads, filename) {
       if (err) console.log(err);
     });
   });
-}
-
-// Function to download and save WASM file
-async function downloadWasmFile(url = "https://unpkg.com/web-ifc@0.0.59/web-ifc-node.wasm", outputPath = "src/web-ifc-node.wasm") {
-  const response = await fetch(url);
-  const buffer = await response.arrayBuffer();
-  fs.writeFileSync(outputPath, Buffer.from(buffer));
 }

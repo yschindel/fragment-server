@@ -7,13 +7,21 @@ const wasmDir = "src/ifc/";
 const wasmFile = "web-ifc-node.wasm";
 const wasmPath = wasmDir + wasmFile;
 
-// Function to download and save WASM file
+/**
+ * Download the wasm file
+ * @param {string} url The url to download the wasm file
+ * @param {string} outputPath The path to save the wasm file
+ */
 async function downloadWasmFile(url = "https://unpkg.com/web-ifc@0.0.59/web-ifc-node.wasm", outputPath = wasmPath) {
   const response = await fetch(url);
   const buffer = await response.arrayBuffer();
   fs.writeFileSync(outputPath, Buffer.from(buffer));
 }
 
+/**
+ * Converts IFC file to fragments. Saves the fragments and properties to the uploads folder.
+ * @param {string} filename The filename of the IFC file
+ */
 async function ifcToFragments(filename) {
   if (!fs.existsSync(wasmPath)) {
     console.log("Downloading WASM file");
