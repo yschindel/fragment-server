@@ -2,6 +2,7 @@ import requests
 import zlib
 import json
 import pandas as pd
+
 def load_data(base_url, file_id):
     try:
         properties_response = requests.get(f"{base_url}/download/{file_id}.gz")
@@ -11,6 +12,7 @@ def load_data(base_url, file_id):
     except Exception as e:
         print(f"Error: {str(e)}")
         return None
+    
 def get_building_name(building):
         value=''
         if building['ObjectType'] is not None:
@@ -20,6 +22,7 @@ def get_building_name(building):
         elif building['LongName']is not None:
             value=building['LongName']['value'] 
         return value  
+
 def convert_data(jsonData):
     if jsonData is None:
         return None,None
@@ -37,8 +40,9 @@ def convert_data(jsonData):
         
         elements.append(element)
     return elements
+
 base_url = "http://localhost:3000"
-file_id = "CenterConference"
+file_id = "test"
 elements=convert_data(load_data(base_url, file_id))
 elements=(pd.DataFrame(elements))
 print(elements)
