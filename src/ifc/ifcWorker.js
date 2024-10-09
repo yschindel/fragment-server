@@ -3,7 +3,22 @@ import fs from "fs";
 import pako from "pako";
 import * as OBC from "@thatopen/components";
 
+const wasmDir = "src/ifc/";
+const wasmFile = "web-ifc-node.wasm";
+const wasmPath = wasmDir + wasmFile;
+
+// Function to download and save WASM file
+async function downloadWasmFile(url = "https://unpkg.com/web-ifc@0.0.59/web-ifc-node.wasm", outputPath = wasmPath) {
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+  fs.writeFileSync(outputPath, Buffer.from(buffer));
+}
+
 async function ifcToFragments(filename) {
+  if (!fs.existsSync(wasmPath)) {
+    console.log("Downloading WASM file");
+    await downloadWasmFile();
+  }
   const filePath = `uploads/${filename}`;
   const originalname = "test";
   const fileData = fs.readFileSync(filePath);
@@ -13,7 +28,7 @@ async function ifcToFragments(filename) {
   const loader = components.get(OBC.IfcLoader);
 
   loader.settings.wasm = {
-    path: "src/ifc/",
+    path: wasmDir,
     absolute: true,
   };
 
